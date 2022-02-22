@@ -1,0 +1,120 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #fff;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.main-container {
+  background: rgb(80, 202, 113);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 2rem;
+  transition: background 0.5s;
+  
+}
+
+.cardholder{
+  display: flex;
+  flex-direction: row;
+  max-width: 800px;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0 25px;
+  row-gap: 10px;
+}
+
+.holder-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  column-gap: 10px;
+  width: 100%;
+}
+
+.card{
+  width: 22%;
+  height: 20vh;
+  border-radius: 10%;
+  background-color: aquamarine;
+  cursor: pointer;
+  background-image: url('./assets/jdun.jpg');
+  background-position: center;
+  background-size: cover;
+  box-shadow: 0 0 4px 2px rgb(0 0 0);
+  transition: box-shadow 0.2s, transform 0.4s, background-image 0.4s;
+}
+
+.card:hover{
+  transform: scale(1.05);
+  box-shadow:0 0 3px 1px rgb(48, 48, 48); 
+}
+
+.card:active{
+  transform: scale(1.0);
+  box-shadow: 0 0 4px 2px rgb(58, 38, 38);
+  
+}
+
+.card.open{
+  transform: rotateY(180deg);
+  pointer-events: none;
+}
+
+.card.played{
+  transform: rotateY(180deg);
+  pointer-events: none;
+}
+
+.footer {
+  padding: 10px 100px;
+  background: #3f51b5;
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer-rs-logo {
+  cursor: pointer;
+  height: 50px;
+}
+
+.footer-rs-icon {
+  width: 100px;
+  height: 50px;
+  fill: #fff;
+  transition: fill 0.5s;
+}
+
+.footer-rs-icon:hover {
+  fill: rgb(255, 64, 64);
+}
+
+.footer-copy {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.footer-link {
+  transition: color 0.4s;
+}
+
+.footer-link:hover {
+  color: rgb(255, 64, 64);
+}
