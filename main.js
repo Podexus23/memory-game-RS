@@ -54,6 +54,11 @@ let cardControl = (function(){
     return `url(${gameMap[cardX][cardY]})`;
   }
 
+  function makeDate(){
+    let date = new Date();
+    return `${date.toLocaleString()}`
+  }
+
   function shuffleArray(array) {
     let chunked = []
     for (let i = array.length - 1; i > 0; i--) {
@@ -91,6 +96,7 @@ let cardControl = (function(){
       })
     }
     if(mainHolder.querySelectorAll('.played').length == 16) {
+      controlModalWindow.getResultData().push([makeDate(), counterControl.getCounter()])
       runTheGame.endGame();
     }
     mainHolder.style.pointerEvents = 'inherit';
@@ -112,25 +118,41 @@ let cardControl = (function(){
 let controlModalWindow = (function(){
   const modal = document.querySelector('.modal-win');
   const main = document.querySelector('.main-container');
+  let resultsData = [];
+  document.addEventListener('DOMContentLoaded', () => {
+    if(localStorage.results.length != 0 ) resultsData = JSON.parse(localStorage.results);
+    if(typeof resultsData == 'string') resultsData = [];
+  })
+  console.log(resultsData)
+  //
+
+  function createResultBlock(date, counter){
+    const div = document.createElement('div');
+    div.classList.add('result-block');
+    div.innerHTML=`
+        <div class="results-date">${date}</div>
+        <div class="results-score">${counter}</div>
+      `;
+    return div;
+  }
   
   function createModal(){
     modal.innerHTML = `
-  <div class="modal-wrapper">
-    <button class="close-modal">x</button>
-    <div class="win-score">Счёт: <span class="final-score">${counterControl.getCounter() || 0}</span></div>
-    <div class="results">
-      <div class="results-title">
-        <div class="date-title">Дата:</div>
-        <div class="date-score">Счёт:</div>
+      <div class="modal-wrapper">
+        <button class="close-modal">x</button>
+        <div class="win-score">Счёт: <span class="final-score">${counterControl.getCounter() || 0}</span></div>
+        <div class="results">
+          <div class="results-title">
+            <div class="date-title">Дата:</div>
+            <div class="date-score">Счёт:</div>
+          </div>
+        </div>
+        <button class="replay-button">Ещё разок?</button>
       </div>
-      <duv class="result-block">
-        <div class="results-date">20.07.2022</div>
-        <div class="results-score">15</div>
-      </duv>
-    </div>
-    <button class="replay-button">Ещё разок?</button>
-  </div>
-  `;
+    `;
+    const results = modal.querySelector('.results');
+    if(getResultData() == 0) return;
+    resultsData.forEach(data => results.append(createResultBlock(data[0], data[1]))) 
   }
   function showModal(){
     main.style.filter = 'blur(5px)';
@@ -140,11 +162,15 @@ let controlModalWindow = (function(){
     main.style.filter = 'none';
     modal.style.display = 'none';
   }
-
+  function getResultData(){
+    if(resultsData.length > 9) resultsData.shift();
+    return resultsData
+  }
   return {
     createModal,
     showModal,
     hideModal,
+    getResultData,
   }
 })()
 
@@ -175,14 +201,20 @@ let counterControl = (function(){
 let runTheGame = (function(){
   const main = document.querySelector('.main-container');
   const resultsButton = document.querySelector('.score');
+  
   resultsButton.addEventListener('click', endGame)
   
   let startGame = (function(){
     main.append(createCardHolder.createMainHolder());
+    takeDataFromLocalStorage();
     controlModalWindow.createModal();
     cardControl();
   });
   startGame();
+
+  function takeDataFromLocalStorage(){
+
+  }
 
   function endGame(){
     controlModalWindow.createModal();
@@ -198,11 +230,17 @@ let runTheGame = (function(){
     controlModalWindow.hideModal();
     counterControl.resetCounter();
     startGame();
-  }
+  };
+
+  
 
   return {
     endGame,
-    resetGame
+    resetGame,
   }
 })()
+
+window.addEventListener('unload', () => {
+  localStorage.results = JSON.stringify(controlModalWindow.getResultData())
+})
 
