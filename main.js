@@ -1,9 +1,8 @@
 const NAMES = ['baby', 'cat', 'colonel', 'drake', 'lilkeanu', 'robert', 'spider', 'sponge'];
 
 
-let creatCardHolder = (function(){
-  const main = document.querySelector('.main-container');
-  main.append(createMainHolder());
+let createCardHolder = (function(){
+  
 
   function createMainHolder(){
     const mainCardHolder = document.createElement('div');
@@ -37,11 +36,15 @@ let creatCardHolder = (function(){
   function createCard(){
     const card = document.createElement('div');
     card.classList.add('card')
+    card.style.backgroundImage = `url(./assets/jdun.jpg)`;
     return card
+  }
+  return{
+    createMainHolder,
   }
 })()
 
-let gameControl = (function(){
+let cardControl = (function(){
   const mainHolder = document.querySelector('.cardholder');
   let sources = NAMES.map(name => [`./assets/${name}1.jpg`, `./assets/${name}2.jpg`]).flat();
   let gameMap = shuffleArray(sources);
@@ -66,6 +69,7 @@ let gameControl = (function(){
   function checkForPlayed(){
     let played = mainHolder.querySelectorAll('.open');
     if(played.length == 2){
+      counterControl.counterCount()
       let first = getSrc(played[0]).slice(13, 16);
       let second = getSrc(played[1]).slice(13, 16);
       return first == second
@@ -86,6 +90,9 @@ let gameControl = (function(){
         node.style.backgroundImage = `url(./assets/jdun.jpg)`;
       })
     }
+    if(mainHolder.querySelectorAll('.played').length == 16) {
+      runTheGame.endGame();
+    }
     mainHolder.style.pointerEvents = 'inherit';
   }
 
@@ -96,8 +103,106 @@ let gameControl = (function(){
     let played = mainHolder.querySelectorAll('.open');
     if(played.length == 2) {
       mainHolder.style.pointerEvents = 'none';
-      setTimeout(setClasses, 800);}
-    
+      setTimeout(setClasses, 800);
+    }
   }
   mainHolder.addEventListener('click', turnCard);
+})
+
+let controlModalWindow = (function(){
+  const modal = document.querySelector('.modal-win');
+  const main = document.querySelector('.main-container');
+  
+  function createModal(){
+    modal.innerHTML = `
+  <div class="modal-wrapper">
+    <button class="close-modal">x</button>
+    <div class="win-score">Счёт: <span class="final-score">${counterControl.getCounter() || 0}</span></div>
+    <div class="results">
+      <div class="results-title">
+        <div class="date-title">Дата:</div>
+        <div class="date-score">Счёт:</div>
+      </div>
+      <duv class="result-block">
+        <div class="results-date">20.07.2022</div>
+        <div class="results-score">15</div>
+      </duv>
+    </div>
+    <button class="replay-button">Ещё разок?</button>
+  </div>
+  `;
+  }
+  function showModal(){
+    main.style.filter = 'blur(5px)';
+    modal.style.display = 'flex';
+  }
+  function hideModal(){
+    main.style.filter = 'none';
+    modal.style.display = 'none';
+  }
+
+  return {
+    createModal,
+    showModal,
+    hideModal,
+  }
 })()
+
+let counterControl = (function(){
+  let counter = 0;
+  let headerCounter = document.querySelector('.counter span')
+  function counterCount(){
+    counter++
+    headerCounter.textContent = counter;
+  }
+
+  function getCounter(){
+    return counter
+  }
+
+  function resetCounter(){
+    counter = 0;
+    headerCounter.textContent = counter;
+  }
+
+  return {
+    getCounter,
+    counterCount,
+    resetCounter
+  }
+})()
+
+let runTheGame = (function(){
+  const main = document.querySelector('.main-container');
+  const resultsButton = document.querySelector('.score');
+  resultsButton.addEventListener('click', endGame)
+  
+  let startGame = (function(){
+    main.append(createCardHolder.createMainHolder());
+    controlModalWindow.createModal();
+    cardControl();
+  });
+  startGame();
+
+  function endGame(){
+    controlModalWindow.createModal();
+    const closeModalButton = document.querySelector('.close-modal');
+    const resetButton = document.querySelector('.replay-button');
+    closeModalButton.addEventListener('click', controlModalWindow.hideModal);
+    resetButton.addEventListener('click', resetGame)
+    controlModalWindow.showModal();
+  }
+
+  function resetGame(){
+    document.querySelector('.cardholder').remove();
+    controlModalWindow.hideModal();
+    counterControl.resetCounter();
+    startGame();
+  }
+
+  return {
+    endGame,
+    resetGame
+  }
+})()
+

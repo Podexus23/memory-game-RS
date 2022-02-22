@@ -18,6 +18,39 @@ a {
   color: inherit;
 }
 
+button{
+  cursor: pointer;
+}
+
+.header{
+  background: #3f51b5;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.5rem;
+  padding: 15px;
+}
+
+.score{
+  background: #7889ea;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  padding: 5px;
+  cursor: pointer;
+  border: none;
+  color: #fff;
+  transition: all 0.3s;
+}
+
+.score:hover{
+  background: #182eac;
+}
+
+.score:active{
+  background: #324ff4;
+}
+
 .main-container {
   background: rgb(80, 202, 113);
   height: 100%;
@@ -117,4 +150,74 @@ a {
 
 .footer-link:hover {
   color: rgb(255, 64, 64);
+}
+
+.modal-win{
+  position: absolute;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.modal-wrapper{
+  background-color: #7889ea;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  font-family: Arial, Helvetica, sans-serif;
+  flex-direction: column;
+  row-gap: 10px;
+  min-width: 300px;
+  font-size: 1.2rem;
+}
+
+.modal-wrapper .results{
+  display: flex;
+  flex-direction: column;
+}
+
+.results-title,.result-block{
+  display: flex;
+  justify-content: space-between;
+}
+
+.close-modal{
+  background: #ff2929;
+  padding: 1px 5px 2px;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid red;
+  align-self: end;
+  color: white;
+  transition: background 0.3s;
+}
+
+.close-modal:hover{
+  background: #ff8b8b;
+}
+.close-modal:active{
+  background: #ff4242;
+}
+
+.replay-button{
+    background: #2069f8;
+    padding: 7px 5px;
+    border-radius: 5px;
+    border: 1px solid #0012ff;
+    color: white;
+    font-size: 1.1rem;
+    transition: background 0.3s;
+}
+
+.replay-button:hover{
+  background:rgb(91, 136, 227);
+}
+.replay-button:active{
+  background: rgb(40, 112, 255);
+  border: 1px solid #656fff;
 }
